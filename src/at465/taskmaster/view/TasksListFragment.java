@@ -10,15 +10,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import at465.taskmaster.R;
 import at465.taskmaster.application.TaskMasterApplication;
-import at465.taskmaster.application.TasksManager;
-import at465.taskmaster.application.TasksManager.TasksListener;
+import at465.taskmaster.application.TaskManager;
+import at465.taskmaster.application.TaskManager.TasksListener;
 
 import com.google.api.services.tasks.model.Task;
 
 public class TasksListFragment extends ListFragment implements TasksListener {
     private String taskListId;
     private String taskListTitle;
-    private TasksManager tasksManager;
+    private TaskManager taskManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class TasksListFragment extends ListFragment implements TasksListener {
 	taskListId = getArguments().getString("taskListId");
 	taskListTitle = getArguments().getString("taskListTitle");
 
-	tasksManager = ((TaskMasterApplication) getActivity().getApplication()).getTasksManager();
+	taskManager = ((TaskMasterApplication) getActivity().getApplication()).getTasksManager();
     }
 
     @Override
@@ -40,14 +40,14 @@ public class TasksListFragment extends ListFragment implements TasksListener {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 	super.onActivityCreated(savedInstanceState);
-	tasksManager.setTaskListener(taskListId, this);
-	tasksManager.getTasks(taskListId);
+	taskManager.setTaskListener(taskListId, this);
+	taskManager.getTasks(taskListId);
     }
 
     @Override
     public void onDestroyView() {
 	super.onDestroyView();
-	tasksManager.setTaskListener(taskListId, null);
+	taskManager.setTaskListener(taskListId, null);
     }
 
     @Override

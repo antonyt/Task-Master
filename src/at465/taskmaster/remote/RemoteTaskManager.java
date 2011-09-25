@@ -10,12 +10,12 @@ import android.os.AsyncTask;
 import com.google.api.services.tasks.Tasks;
 import com.google.api.services.tasks.model.TaskLists;
 
-public class RemoteTasksManager {
+public class RemoteTaskManager {
     private Tasks taskService;
     private Listener listener;
     private Authenticator authenticator;
 
-    public RemoteTasksManager(AccountManager accountManager, String apiKey) {
+    public RemoteTaskManager(AccountManager accountManager, String apiKey) {
 	authenticator = new Authenticator(accountManager, apiKey);
     }
 

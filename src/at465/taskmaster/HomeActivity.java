@@ -6,15 +6,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import at465.taskmaster.application.TaskMasterApplication;
-import at465.taskmaster.application.TasksManager;
-import at465.taskmaster.application.TasksManager.TaskListListener;
+import at465.taskmaster.application.TaskManager;
+import at465.taskmaster.application.TaskManager.TaskListListener;
 import at465.taskmaster.view.TaskFragmentPagerAdapter;
 
 import com.google.api.services.tasks.model.TaskList;
 
 public class HomeActivity extends FragmentActivity implements TaskListListener {
     
-    private TasksManager tasksManager;
+    private TaskManager taskManager;
     private ViewPager viewPager;
 
     @Override
@@ -25,15 +25,15 @@ public class HomeActivity extends FragmentActivity implements TaskListListener {
 	viewPager = (ViewPager) findViewById(R.id.view_pager);
 	
 	// ask for task lists from the TasksManager
-	tasksManager = ((TaskMasterApplication) getApplication()).getTasksManager();
-	tasksManager.setTaskListListener(this);
-	tasksManager.getTaskLists();
+	taskManager = ((TaskMasterApplication) getApplication()).getTasksManager();
+	taskManager.setTaskListListener(this);
+	taskManager.getTaskLists();
 
     }
     
     @Override
     protected void onDestroy() {
-	tasksManager.setTaskListListener(null);
+	taskManager.setTaskListListener(null);
         super.onDestroy();
     }
 

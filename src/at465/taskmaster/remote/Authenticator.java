@@ -18,7 +18,9 @@ import com.google.api.services.tasks.Tasks;
 
 public class Authenticator {
 
-    private String AUTH_TOKEN_TYPE = "Manage your tasks";
+    private static final String AUTH_TOKEN_TYPE = "Manage your tasks";
+    private static final String ACCOUNT_TYPE = "com.google";
+    private static final String APPLICATION_NAME = "TaskMaster";
 
     private AccountManager accountManager;
     private String apiKey;
@@ -31,10 +33,10 @@ public class Authenticator {
     }
 
     public Tasks authenticate() throws AuthenticatorException, OperationCanceledException, IOException {
-	Account account = accountManager.getAccountsByType("com.google")[0];
+	Account account = accountManager.getAccountsByType(ACCOUNT_TYPE)[0];
 
 	accountManagerFuture = accountManager.getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null);
-	accountManager.invalidateAuthToken("com.google",
+	accountManager.invalidateAuthToken(ACCOUNT_TYPE,
 		accountManagerFuture.getResult().getString(AccountManager.KEY_AUTHTOKEN));
 	accountManagerFuture = accountManager.getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null);
 
@@ -44,7 +46,7 @@ public class Authenticator {
 	AccessProtectedResource accessProtectedResource = new GoogleAccessProtectedResource(accessToken);
 	Tasks service = new Tasks(transport, accessProtectedResource, new JacksonFactory());
 	service.setKey(apiKey);
-	service.setApplicationName("TaskMaster");
+	service.setApplicationName(APPLICATION_NAME);
 
 	return service;
 

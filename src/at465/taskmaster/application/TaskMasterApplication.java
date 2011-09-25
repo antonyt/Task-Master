@@ -5,12 +5,12 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import at465.taskmaster.local.LocalTasksManager;
-import at465.taskmaster.remote.RemoteTasksManager;
+import at465.taskmaster.remote.RemoteTaskManager;
 
 public class TaskMasterApplication extends Application {
 
     private PropertyManager propertyManager;
-    private TasksManager tasksManager;
+    private TaskManager taskManager;
 
     @Override
     public void onCreate() {
@@ -24,17 +24,17 @@ public class TaskMasterApplication extends Application {
 	// instantiate remote tasks manager and dependencies
 	AccountManager accountManager = AccountManager.get(this);
 	String apiKey = propertyManager.getApiKey();
-	RemoteTasksManager remoteTasksManager = new RemoteTasksManager(accountManager, apiKey);
+	RemoteTaskManager remoteTaskManager = new RemoteTaskManager(accountManager, apiKey);
 
-	tasksManager = new TasksManager(localTasksManager, remoteTasksManager);
+	taskManager = new TaskManager(localTasksManager, remoteTaskManager);
     }
 
     public PropertyManager getPropertyManager() {
 	return propertyManager;
     }
 
-    public TasksManager getTasksManager() {
-	return tasksManager;
+    public TaskManager getTasksManager() {
+	return taskManager;
     }
 
 }
