@@ -15,9 +15,9 @@ import com.google.api.services.tasks.model.Tasks;
 public class TasksManager {
     private List<TaskList> tasksList = new ArrayList<TaskList>();
     private Map<String, List<Task>> tasks = new HashMap<String, List<Task>>();
+    private Map<String, TasksListener> listeners = new HashMap<String, TasksListener>();
     private RemoteTasksManager remoteTasksManager;
     private LocalTasksManager localTasksManager;
-    private TasksListener listener;
 
     public List<TaskList> getTaskLists() {
 	return tasksList;
@@ -25,7 +25,7 @@ public class TasksManager {
 
     public void getTasks(String taskListId) {
 	if (tasks.containsKey(taskListId)) {
-	    listener.tasksUpdated(taskListId, tasks.get(taskListId));
+	    listeners.get(taskListId).tasksUpdated(taskListId, tasks.get(taskListId));
 	} else {
 	    remoteTasksManager.loadTasks(taskListId);
 	}
@@ -40,7 +40,7 @@ public class TasksManager {
 	    @Override
 	    public void tasksUpdated(String taskListId, Tasks tasks) {
 		TasksManager.this.tasks.put(taskListId, tasks.getItems());
-		listener.tasksUpdated(taskListId, tasks.getItems());
+		listeners.get(taskListId).tasksUpdated(taskListId, tasks.getItems());
 	    }
 
 	    @Override
@@ -52,8 +52,8 @@ public class TasksManager {
 
     }
 
-    public void setTasksListener(TasksListener listener) {
-	this.listener = listener;
+    public void setTaskListener(String taskListId, TasksListener listener) {
+	listeners.put(taskListId, listener);
     }
 
     public static interface TasksListener {
