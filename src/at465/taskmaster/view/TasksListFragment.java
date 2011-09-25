@@ -2,13 +2,18 @@ package at465.taskmaster.view;
 
 import java.util.List;
 
-import com.google.api.services.tasks.model.Task;
-
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import at465.taskmaster.R;
 import at465.taskmaster.application.TaskMasterApplication;
 import at465.taskmaster.application.TasksManager;
 import at465.taskmaster.application.TasksManager.TasksListener;
+
+import com.google.api.services.tasks.model.Task;
 
 public class TasksListFragment extends ListFragment implements TasksListener {
     private String taskListId;
@@ -18,7 +23,16 @@ public class TasksListFragment extends ListFragment implements TasksListener {
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	taskListId = getArguments().getString("taskListId");
+	
 	tasksManager = ((TaskMasterApplication) getActivity().getApplication()).getTasksManager();
+    }
+    
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	View root = inflater.inflate(R.layout.task_list, container, false);
+	TextView title = (TextView) root.findViewById(R.id.title);
+	title.setText(getArguments().getString("taskListTitle"));
+        return root;
     }
 
     @Override
