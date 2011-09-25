@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
 import at465.taskmaster.local.LocalTaskManager;
 import at465.taskmaster.remote.RemoteTaskManager;
 
@@ -21,22 +20,6 @@ public class TaskManager {
     private TaskListListener taskListListener;
     private RemoteTaskManager remoteTaskManager;
     private LocalTaskManager localTaskManager;
-
-    public void getTaskLists() {
-	if (taskLists.size() > 0) {
-	    taskListListener.taskListsUpdated(taskLists);
-	} else {
-	    remoteTaskManager.loadTaskLists();
-	}
-    }
-
-    public void getTasks(String taskListId) {
-	if (tasks.containsKey(taskListId)) {
-	    taskListeners.get(taskListId).tasksUpdated(taskListId, tasks.get(taskListId));
-	} else {
-	    remoteTaskManager.loadTasks(taskListId);
-	}
-    }
 
     public TaskManager(LocalTaskManager localTaskManager, RemoteTaskManager remoteTaskManager) {
 	this.localTaskManager = localTaskManager;
@@ -59,6 +42,22 @@ public class TaskManager {
 	remoteTaskManager.setTasksListener(remoteTaskslistener);
     }
 
+    public void getTaskLists() {
+	if (taskLists.size() > 0) {
+	    taskListListener.taskListsUpdated(taskLists);
+	} else {
+	    remoteTaskManager.loadTaskLists();
+	}
+    }
+
+    public void getTasks(String taskListId) {
+	if (tasks.containsKey(taskListId)) {
+	    taskListeners.get(taskListId).tasksUpdated(taskListId, tasks.get(taskListId));
+	} else {
+	    remoteTaskManager.loadTasks(taskListId);
+	}
+    }
+    
     RemoteTaskManager.Listener remoteTaskslistener = new RemoteTaskManager.Listener() {
 	@Override
 	public void tasksUpdated(String taskListId, Tasks tasks) {
