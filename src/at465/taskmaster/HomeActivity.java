@@ -22,9 +22,9 @@ public class HomeActivity extends FragmentActivity implements TasksListener {
 
 	if (savedInstanceState == null) {
 	    list = new TasksListFragment();
-	    getSupportFragmentManager().beginTransaction().add(R.id.list_container, list, "list").commit();
+	    getSupportFragmentManager().beginTransaction().add(R.id.list_container, list, TasksListFragment.class.getName()).commit();
 	} else {
-	    list = (TasksListFragment) getSupportFragmentManager().findFragmentByTag("list");
+	    list = (TasksListFragment) getSupportFragmentManager().findFragmentByTag(TasksListFragment.class.getName());
 	}
 
 	adapter = new TasksAdapter(this);
