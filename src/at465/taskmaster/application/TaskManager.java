@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.util.Log;
 import at465.taskmaster.local.LocalTaskManager;
 import at465.taskmaster.remote.RemoteTaskManager;
-import at465.taskmaster.remote.RemoteTaskManager.Listener;
 
 import com.google.api.services.tasks.model.Task;
 import com.google.api.services.tasks.model.TaskList;
@@ -40,29 +40,45 @@ public class TaskManager {
 
     public TaskManager(LocalTaskManager localTaskManager, RemoteTaskManager remoteTaskManager) {
 	this.localTaskManager = localTaskManager;
+	
+	// load cached task lists
+	TaskLists restoredTaskLists = localTaskManager.restoreTaskLists();
+	if (restoredTaskLists != null) {
+	    taskLists.addAll(restoredTaskLists.getItems());
+	}
+	
+	// load cached tasks for each task list
+	for (TaskList tasklist : taskLists) {
+	    Tasks restoredTasks = localTaskManager.restoreTasks(tasklist.getId());
+	    if (restoredTasks != null) {
+		tasks.put(tasklist.getId(), restoredTasks.getItems());
+	    }
+	}
 
 	this.remoteTaskManager = remoteTaskManager;
-	remoteTaskManager.setTasksListener(new Listener() {
-
-	    @Override
-	    public void tasksUpdated(String taskListId, Tasks tasks) {
-		TaskManager.this.tasks.put(taskListId, tasks.getItems());
-		taskListeners.get(taskListId).tasksUpdated(taskListId, tasks.getItems());
-	    }
-
-	    @Override
-	    public void tasksListUpdated(TaskLists tasklists) {
-		taskLists = tasklists.getItems();
-		taskListListener.taskListsUpdated(tasklists.getItems());
-	    }
-	});
-
+	remoteTaskManager.setTasksListener(remoteTaskslistener);
     }
+
+    RemoteTaskManager.Listener remoteTaskslistener = new RemoteTaskManager.Listener() {
+	@Override
+	public void tasksUpdated(String taskListId, Tasks tasks) {
+	    TaskManager.this.tasks.put(taskListId, tasks.getItems());
+	    localTaskManager.saveTasks(taskListId, tasks);
+	    taskListeners.get(taskListId).tasksUpdated(taskListId, tasks.getItems());
+	}
+
+	@Override
+	public void tasksListUpdated(TaskLists tasklists) {
+	    taskLists = tasklists.getItems();
+	    localTaskManager.saveTaskLists(tasklists);
+	    taskListListener.taskListsUpdated(tasklists.getItems());
+	}
+    };
 
     public void setTaskListener(String taskListId, TasksListener listener) {
 	taskListeners.put(taskListId, listener);
     }
-    
+
     public void setTaskListListener(TaskListListener listener) {
 	taskListListener = listener;
     }
@@ -70,7 +86,7 @@ public class TaskManager {
     public static interface TasksListener {
 	void tasksUpdated(String taskListId, List<Task> tasks);
     }
-    
+
     public static interface TaskListListener {
 	void taskListsUpdated(List<TaskList> taskLists);
     }
