@@ -1,4 +1,4 @@
-package at465.taskmaster.fragment;
+package at465.taskmaster.view;
 
 import java.util.List;
 
@@ -6,7 +6,6 @@ import com.google.api.services.tasks.model.Task;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import at465.taskmaster.TasksAdapter;
 import at465.taskmaster.application.TaskMasterApplication;
 import at465.taskmaster.application.TasksManager;
 import at465.taskmaster.application.TasksManager.TasksListener;

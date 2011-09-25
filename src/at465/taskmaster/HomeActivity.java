@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import at465.taskmaster.application.TaskMasterApplication;
 import at465.taskmaster.application.TasksManager;
 import at465.taskmaster.application.TasksManager.TaskListListener;
+import at465.taskmaster.view.TaskFragmentPagerAdapter;
 
 import com.google.api.services.tasks.model.TaskList;
 

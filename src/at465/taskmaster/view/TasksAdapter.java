@@ -1,4 +1,4 @@
-package at465.taskmaster;
+package at465.taskmaster.view;
 
 import java.util.List;
 
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import at465.taskmaster.R;
+import at465.taskmaster.R.id;
+import at465.taskmaster.R.layout;
 
 import com.google.api.services.tasks.model.Task;
 

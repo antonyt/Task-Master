@@ -1,4 +1,4 @@
-package at465.taskmaster;
+package at465.taskmaster.view;
 
 import java.util.List;
 
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import at465.taskmaster.fragment.TasksListFragment;
 
 import com.google.api.services.tasks.model.TaskList;
 

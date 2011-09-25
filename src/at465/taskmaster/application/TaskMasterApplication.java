@@ -4,6 +4,8 @@ import android.accounts.AccountManager;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import at465.taskmaster.local.LocalTasksManager;
+import at465.taskmaster.remote.RemoteTasksManager;
 
 public class TaskMasterApplication extends Application {
 

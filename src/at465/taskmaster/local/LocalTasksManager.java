@@ -1,25 +1,24 @@
-package at465.taskmaster.application;
+package at465.taskmaster.local;
 
 import java.io.IOException;
 
-import android.accounts.AccountManager;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import at465.taskmaster.authentication.Authenticator;
 
 import com.google.api.services.tasks.Tasks;
 import com.google.api.services.tasks.model.TaskLists;
 
-public class RemoteTasksManager {
-    private Tasks taskService;
+public class LocalTasksManager {
     private Listener listener;
-    private Authenticator authenticator;
+    private SharedPreferences sharedPreferences;
 
-    public RemoteTasksManager(AccountManager accountManager, String apiKey) {
-	authenticator = new Authenticator(accountManager, apiKey);
+    public LocalTasksManager(SharedPreferences sharedPreferences) {
+	this.sharedPreferences = sharedPreferences;
     }
-
+    
     public void setTasksListener(Listener listener) {
 	this.listener = listener;
     }
@@ -29,18 +28,6 @@ public class RemoteTasksManager {
 
 	    @Override
 	    protected TaskLists doInBackground(Void... params) {
-		try {
-		    taskService = taskService == null ? authenticator.authenticate() : taskService;
-		    return taskService.tasklists.list().execute();
-		} catch (IOException e) {
-		    e.printStackTrace();
-		    return null;
-		} catch (AuthenticatorException e) {
-		    e.printStackTrace();
-		} catch (OperationCanceledException e) {
-		    e.printStackTrace();
-		}
-
 		return null;
 	    }
 
@@ -57,17 +44,6 @@ public class RemoteTasksManager {
 
 	    @Override
 	    protected com.google.api.services.tasks.model.Tasks doInBackground(Void... params) {
-		try {
-		    taskService = taskService == null ? authenticator.authenticate() : taskService;
-		    return taskService.tasks.list(taskListId).execute();
-		} catch (IOException e) {
-		    e.printStackTrace();
-		    return null;
-		} catch (AuthenticatorException e) {
-		    e.printStackTrace();
-		} catch (OperationCanceledException e) {
-		    e.printStackTrace();
-		}
 		return null;
 	    }
 

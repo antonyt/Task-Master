@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import at465.taskmaster.application.RemoteTasksManager.Listener;
+import at465.taskmaster.local.LocalTasksManager;
+import at465.taskmaster.remote.RemoteTasksManager;
+import at465.taskmaster.remote.RemoteTasksManager.Listener;
 
 import com.google.api.services.tasks.model.Task;
 import com.google.api.services.tasks.model.TaskList;

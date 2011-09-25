@@ -1,4 +1,4 @@
-package at465.taskmaster.authentication;
+package at465.taskmaster.remote;
 
 import java.io.IOException;
 
