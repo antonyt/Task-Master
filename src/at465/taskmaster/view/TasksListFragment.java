@@ -17,22 +17,24 @@ import com.google.api.services.tasks.model.Task;
 
 public class TasksListFragment extends ListFragment implements TasksListener {
     private String taskListId;
+    private String taskListTitle;
     private TasksManager tasksManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	taskListId = getArguments().getString("taskListId");
-	
+	taskListTitle = getArguments().getString("taskListTitle");
+
 	tasksManager = ((TaskMasterApplication) getActivity().getApplication()).getTasksManager();
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	View root = inflater.inflate(R.layout.task_list, container, false);
 	TextView title = (TextView) root.findViewById(R.id.title);
-	title.setText(getArguments().getString("taskListTitle"));
-        return root;
+	title.setText(taskListTitle);
+	return root;
     }
 
     @Override

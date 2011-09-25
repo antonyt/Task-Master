@@ -23,6 +23,7 @@ public class TaskFragmentPagerAdapter extends FragmentStatePagerAdapter {
 	Fragment list = new TasksListFragment();
 	Bundle args = new Bundle();
 	args.putString("taskListId", taskLists.get(position).getId());
+	args.putString("taskListTitle", taskLists.get(position).getTitle());
 	list.setArguments(args);
 	return list;
     }
