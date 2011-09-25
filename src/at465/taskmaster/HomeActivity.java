@@ -1,43 +1,42 @@
 package at465.taskmaster;
 
+import java.util.List;
+
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import at465.taskmaster.fragment.TasksListFragment;
+import at465.taskmaster.application.TaskMasterApplication;
+import at465.taskmaster.application.TasksManager;
+import at465.taskmaster.application.TasksManager.TaskListListener;
 
-public class HomeActivity extends FragmentActivity {
+import com.google.api.services.tasks.model.TaskList;
 
-    private TasksListFragment list;
+public class HomeActivity extends FragmentActivity implements TaskListListener {
+    
+    private TasksManager tasksManager;
+    private ViewPager viewPager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.main);
 
-	ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-	viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+	viewPager = (ViewPager) findViewById(R.id.view_pager);
+	tasksManager = ((TaskMasterApplication) getApplication()).getTasksManager();
+	tasksManager.setTaskListListener(this);
+	tasksManager.getTaskLists();
 
-	    @Override
-	    public int getCount() {
-		return 1;
-	    }
+    }
+    
+    @Override
+    protected void onDestroy() {
+	tasksManager.setTaskListListener(null);
+        super.onDestroy();
+    }
 
-	    @Override
-	    public Fragment getItem(int position) {
-		list = new TasksListFragment();
-		Bundle args = new Bundle();
-		switch (position) {
-		case 0:
-		    args.putString("taskListId", "@default");
-		    break;
-		}
-		list.setArguments(args);
-		return list;
-	    }
-	});
-
+    @Override
+    public void taskListsUpdated(final List<TaskList> taskLists) {
+	viewPager.setAdapter(new TaskFragmentPagerAdapter(getSupportFragmentManager(), taskLists));
     }
 
 }
