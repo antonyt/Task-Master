@@ -20,10 +20,10 @@ public class TaskFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-	Fragment list = new TasksListFragment();
+	Fragment list = new TaskListFragment();
 	Bundle args = new Bundle();
-	args.putString("taskListId", taskLists.get(position).getId());
-	args.putString("taskListTitle", taskLists.get(position).getTitle());
+	args.putString(TaskListFragment.TASK_LIST_ID_KEY, taskLists.get(position).getId());
+	args.putString(TaskListFragment.TASK_LIST_TITLE_KEY, taskLists.get(position).getTitle());
 	list.setArguments(args);
 	return list;
     }

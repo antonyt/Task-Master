@@ -15,7 +15,10 @@ import at465.taskmaster.application.TaskManager.TasksListener;
 
 import com.google.api.services.tasks.model.Task;
 
-public class TasksListFragment extends ListFragment implements TasksListener {
+public class TaskListFragment extends ListFragment implements TasksListener {
+    public static final String TASK_LIST_ID_KEY = "taskListId";
+    public static final String TASK_LIST_TITLE_KEY = "taskListTitle";
+    
     private String taskListId;
     private String taskListTitle;
     private TaskManager taskManager;
@@ -23,8 +26,8 @@ public class TasksListFragment extends ListFragment implements TasksListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	taskListId = getArguments().getString("taskListId");
-	taskListTitle = getArguments().getString("taskListTitle");
+	taskListId = getArguments().getString(TASK_LIST_ID_KEY);
+	taskListTitle = getArguments().getString(TASK_LIST_TITLE_KEY);
 
 	taskManager = ((TaskMasterApplication) getActivity().getApplication()).getTasksManager();
     }
@@ -52,7 +55,7 @@ public class TasksListFragment extends ListFragment implements TasksListener {
 
     @Override
     public void tasksUpdated(String taskListId, List<Task> tasks) {
-	TasksAdapter adapter = new TasksAdapter(getActivity());
+	TaskListAdapter adapter = new TaskListAdapter(getActivity());
 	adapter.setData(tasks);
 	setListAdapter(adapter);
     }

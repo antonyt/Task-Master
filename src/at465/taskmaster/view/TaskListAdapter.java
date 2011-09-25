@@ -13,13 +13,13 @@ import at465.taskmaster.R;
 
 import com.google.api.services.tasks.model.Task;
 
-public class TasksAdapter extends BaseAdapter {
+public class TaskListAdapter extends BaseAdapter {
 
     private List<Task> tasks;
     private Context context;
     private LayoutInflater inflater;
 
-    public TasksAdapter(Context context) {
+    public TaskListAdapter(Context context) {
 	this.context = context;
 	this.inflater = LayoutInflater.from(context);
     }
