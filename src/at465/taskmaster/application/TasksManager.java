@@ -13,19 +13,24 @@ import com.google.api.services.tasks.model.TaskLists;
 import com.google.api.services.tasks.model.Tasks;
 
 public class TasksManager {
-    private List<TaskList> tasksList = new ArrayList<TaskList>();
+    private List<TaskList> taskLists = new ArrayList<TaskList>();
     private Map<String, List<Task>> tasks = new HashMap<String, List<Task>>();
-    private Map<String, TasksListener> listeners = new HashMap<String, TasksListener>();
+    private Map<String, TasksListener> taskListeners = new HashMap<String, TasksListener>();
+    private TaskListListener taskListListener;
     private RemoteTasksManager remoteTasksManager;
     private LocalTasksManager localTasksManager;
 
-    public List<TaskList> getTaskLists() {
-	return tasksList;
+    public void getTaskLists() {
+	if (taskLists.size() > 0) {
+	    taskListListener.taskListsUpdated(taskLists);
+	} else {
+	    remoteTasksManager.loadTaskLists();
+	}
     }
 
     public void getTasks(String taskListId) {
 	if (tasks.containsKey(taskListId)) {
-	    listeners.get(taskListId).tasksUpdated(taskListId, tasks.get(taskListId));
+	    taskListeners.get(taskListId).tasksUpdated(taskListId, tasks.get(taskListId));
 	} else {
 	    remoteTasksManager.loadTasks(taskListId);
 	}
@@ -40,24 +45,32 @@ public class TasksManager {
 	    @Override
 	    public void tasksUpdated(String taskListId, Tasks tasks) {
 		TasksManager.this.tasks.put(taskListId, tasks.getItems());
-		listeners.get(taskListId).tasksUpdated(taskListId, tasks.getItems());
+		taskListeners.get(taskListId).tasksUpdated(taskListId, tasks.getItems());
 	    }
 
 	    @Override
 	    public void tasksListUpdated(TaskLists tasklists) {
-		// TODO Auto-generated method stub
-
+		taskLists = tasklists.getItems();
+		taskListListener.taskListsUpdated(tasklists.getItems());
 	    }
 	});
 
     }
 
     public void setTaskListener(String taskListId, TasksListener listener) {
-	listeners.put(taskListId, listener);
+	taskListeners.put(taskListId, listener);
+    }
+    
+    public void setTaskListListener(TaskListListener listener) {
+	taskListListener = listener;
     }
 
     public static interface TasksListener {
 	void tasksUpdated(String taskListId, List<Task> tasks);
+    }
+    
+    public static interface TaskListListener {
+	void taskListsUpdated(List<TaskList> taskLists);
     }
 
 }
