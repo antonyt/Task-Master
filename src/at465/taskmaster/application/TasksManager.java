@@ -39,7 +39,7 @@ public class TasksManager {
 
 	    @Override
 	    public void tasksUpdated(String taskListId, Tasks tasks) {
-		tasks.put(taskListId, tasks.getItems());
+		TasksManager.this.tasks.put(taskListId, tasks.getItems());
 		listener.tasksUpdated(taskListId, tasks.getItems());
 	    }
 
