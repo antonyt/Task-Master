@@ -4,7 +4,7 @@ import android.accounts.AccountManager;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import at465.taskmaster.local.LocalTasksManager;
+import at465.taskmaster.local.LocalTaskManager;
 import at465.taskmaster.remote.RemoteTaskManager;
 
 public class TaskMasterApplication extends Application {
@@ -19,7 +19,7 @@ public class TaskMasterApplication extends Application {
 
 	// instantiate local tasks manager and dependencies
 	SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-	LocalTasksManager localTasksManager = new LocalTasksManager(sharedPreferences);
+	LocalTaskManager localTasksManager = new LocalTaskManager(sharedPreferences);
 
 	// instantiate remote tasks manager and dependencies
 	AccountManager accountManager = AccountManager.get(this);

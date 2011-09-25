@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import at465.taskmaster.local.LocalTasksManager;
+import at465.taskmaster.local.LocalTaskManager;
 import at465.taskmaster.remote.RemoteTaskManager;
 import at465.taskmaster.remote.RemoteTaskManager.Listener;
 
@@ -20,7 +20,7 @@ public class TaskManager {
     private Map<String, TasksListener> taskListeners = new HashMap<String, TasksListener>();
     private TaskListListener taskListListener;
     private RemoteTaskManager remoteTaskManager;
-    private LocalTasksManager localTaskManager;
+    private LocalTaskManager localTaskManager;
 
     public void getTaskLists() {
 	if (taskLists.size() > 0) {
@@ -38,7 +38,7 @@ public class TaskManager {
 	}
     }
 
-    public TaskManager(LocalTasksManager localTaskManager, RemoteTaskManager remoteTaskManager) {
+    public TaskManager(LocalTaskManager localTaskManager, RemoteTaskManager remoteTaskManager) {
 	this.localTaskManager = localTaskManager;
 
 	this.remoteTaskManager = remoteTaskManager;

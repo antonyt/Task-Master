@@ -11,11 +11,11 @@ import android.os.AsyncTask;
 import com.google.api.services.tasks.Tasks;
 import com.google.api.services.tasks.model.TaskLists;
 
-public class LocalTasksManager {
+public class LocalTaskManager {
     private Listener listener;
     private SharedPreferences sharedPreferences;
 
-    public LocalTasksManager(SharedPreferences sharedPreferences) {
+    public LocalTaskManager(SharedPreferences sharedPreferences) {
 	this.sharedPreferences = sharedPreferences;
     }
     
