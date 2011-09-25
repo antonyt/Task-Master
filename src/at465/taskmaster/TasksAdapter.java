@@ -18,9 +18,12 @@ public class TasksAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
 
-    public TasksAdapter(Context context, List<Task> tasks) {
+    public TasksAdapter(Context context) {
 	this.context = context;
 	this.inflater = LayoutInflater.from(context);
+    }
+    
+    public void setData(List<Task> tasks) {
 	this.tasks = tasks;
     }
     

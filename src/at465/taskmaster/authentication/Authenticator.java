@@ -30,33 +30,23 @@ public class Authenticator {
 	this.accountManager = accountManager;
     }
 
-    public Tasks authenticate() {
+    public Tasks authenticate() throws AuthenticatorException, OperationCanceledException, IOException {
 	Account account = accountManager.getAccountsByType("com.google")[0];
 
-	try {
-	    accountManagerFuture = accountManager.getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null);
-	    accountManager.invalidateAuthToken("com.google",
-		    accountManagerFuture.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-	    accountManagerFuture = accountManager.getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null);
+	accountManagerFuture = accountManager.getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null);
+	accountManager.invalidateAuthToken("com.google",
+		accountManagerFuture.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+	accountManagerFuture = accountManager.getAuthToken(account, AUTH_TOKEN_TYPE, true, null, null);
 
-	    String accessToken = accountManagerFuture.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+	String accessToken = accountManagerFuture.getResult().getString(AccountManager.KEY_AUTHTOKEN);
 
-	    HttpTransport transport = AndroidHttp.newCompatibleTransport();
-	    AccessProtectedResource accessProtectedResource = new GoogleAccessProtectedResource(accessToken);
-	    Tasks service = new Tasks(transport, accessProtectedResource, new JacksonFactory());
-	    service.setKey(apiKey);
-	    service.setApplicationName("TaskMaster");
+	HttpTransport transport = AndroidHttp.newCompatibleTransport();
+	AccessProtectedResource accessProtectedResource = new GoogleAccessProtectedResource(accessToken);
+	Tasks service = new Tasks(transport, accessProtectedResource, new JacksonFactory());
+	service.setKey(apiKey);
+	service.setApplicationName("TaskMaster");
 
-	    return service;
+	return service;
 
-	} catch (OperationCanceledException e) {
-	    e.printStackTrace();
-	} catch (AuthenticatorException e) {
-	    e.printStackTrace();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-
-	return null;
     }
 }

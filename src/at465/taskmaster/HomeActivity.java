@@ -1,19 +1,19 @@
 package at465.taskmaster;
 
-import java.io.IOException;
+import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.widget.ListAdapter;
 import at465.taskmaster.application.TaskMasterApplication;
-import at465.taskmaster.authentication.Authenticator;
+import at465.taskmaster.application.TasksManager;
+import at465.taskmaster.application.TasksManager.TasksListener;
 
-import com.google.api.services.tasks.Tasks;
+import com.google.api.services.tasks.model.Task;
 
-public class HomeActivity extends FragmentActivity {
+public class HomeActivity extends FragmentActivity implements TasksListener {
 
-    private Tasks service;
     private TasksListFragment list;
+    private TasksAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,20 +22,23 @@ public class HomeActivity extends FragmentActivity {
 
 	if (savedInstanceState == null) {
 	    list = new TasksListFragment();
-	    getSupportFragmentManager().beginTransaction().add(R.id.list_container, list).commit();
+	    getSupportFragmentManager().beginTransaction().add(R.id.list_container, list, "list").commit();
+	} else {
+	    list = (TasksListFragment) getSupportFragmentManager().findFragmentByTag("list");
 	}
 
-	Authenticator authenticator = ((TaskMasterApplication) getApplication()).getAuthenticator();
-	service = authenticator.authenticate();
+	adapter = new TasksAdapter(this);
+	list.setListAdapter(adapter);
 
-	try {
-	    com.google.api.services.tasks.model.Tasks tasks = service.tasks.list("@default").execute();
-	    ListAdapter adapter = new TasksAdapter(HomeActivity.this, tasks.getItems());
-	    list.setListAdapter(adapter);
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
+	TasksManager tasksManager = ((TaskMasterApplication) getApplication()).getTasksManager();
+	tasksManager.setTasksListener(this);
+	tasksManager.getTasks("@default");
+    }
 
+    @Override
+    public void tasksUpdated(String taskListId, List<Task> tasks) {
+	adapter.setData(tasks);
+	adapter.notifyDataSetChanged();
     }
 
 }
