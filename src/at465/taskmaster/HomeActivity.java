@@ -19,9 +19,11 @@ public class HomeActivity extends FragmentActivity implements TaskListListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
+	// set layout and resolve view pager
 	setContentView(R.layout.main);
-
 	viewPager = (ViewPager) findViewById(R.id.view_pager);
+	
+	// ask for task lists from the TasksManager
 	tasksManager = ((TaskMasterApplication) getApplication()).getTasksManager();
 	tasksManager.setTaskListListener(this);
 	tasksManager.getTaskLists();
