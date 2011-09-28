@@ -8,8 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import at465.taskmaster.R;
+import at465.taskmaster.application.TaskConstants;
 
 import com.google.api.services.tasks.model.Task;
 
@@ -23,11 +27,11 @@ public class TaskListAdapter extends BaseAdapter {
 	this.context = context;
 	this.inflater = LayoutInflater.from(context);
     }
-    
+
     public void setData(List<Task> tasks) {
 	this.tasks = tasks;
     }
-    
+
     @Override
     public int getCount() {
 	return tasks == null ? 0 : tasks.size();
@@ -53,6 +57,7 @@ public class TaskListAdapter extends BaseAdapter {
 	    holder = new ViewHolder();
 	    holder.title = (TextView) convertView.findViewById(R.id.title);
 	    holder.dueDate = (TextView) convertView.findViewById(R.id.due_date);
+	    holder.checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
 	    
 	    // set view holder as tag
 	    convertView.setTag(holder);
@@ -62,20 +67,43 @@ public class TaskListAdapter extends BaseAdapter {
 	    holder = (ViewHolder) convertView.getTag();
 	}
 	
-	Task task = tasks.get(position);
+	final Task task = tasks.get(position);
+	final boolean taskCompleted = TaskConstants.COMPLETED.equals(task.getStatus());
 	
+	// set title
 	holder.title.setText(task.getTitle());
-	if (task.getCompleted() != null) {
+	
+	// apply strike-through effect if the task is completed; reset strike-through otherwise
+	if (taskCompleted) {
 	    holder.title.setPaintFlags(holder.title.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 	} else {
 	    holder.title.setPaintFlags(holder.title.getPaintFlags() & (Paint.STRIKE_THRU_TEXT_FLAG - 1));
 	}
 	
+	// set checkbox status, and attach checked listener
+	// we need to write back to the data once the user clicks the checkbox, and then update our views
+	// TODO: do not instantiate a new listener for each call to getView(...)
+	holder.checkbox.setOnCheckedChangeListener(null);
+	holder.checkbox.setChecked(taskCompleted);
+	holder.checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+	    @Override
+	    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if (isChecked) {
+		    task.setStatus(TaskConstants.COMPLETED);
+		} else {
+		    task.setStatus(TaskConstants.NEEDS_ACTION);
+		    task.setCompleted(null);
+		}
+		notifyDataSetChanged();
+	    }
+	});
+	
 	return convertView;
     }
-    
+
     private class ViewHolder {
 	TextView title, dueDate;
+	CheckBox checkbox;
     }
 
 }
