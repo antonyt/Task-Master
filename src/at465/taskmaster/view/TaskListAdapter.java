@@ -94,6 +94,7 @@ public class TaskListAdapter extends BaseAdapter {
 		    task.setStatus(TaskConstants.NEEDS_ACTION);
 		    task.setCompleted(null);
 		}
+		task.set("changed", true);
 		notifyDataSetChanged();
 	    }
 	});

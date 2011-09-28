@@ -33,6 +33,7 @@ public class HomeActivity extends FragmentActivity implements TaskListListener {
     
     @Override
     protected void onDestroy() {
+	taskManager.saveAll();
 	taskManager.setTaskListListener(null);
         super.onDestroy();
     }
@@ -42,4 +43,5 @@ public class HomeActivity extends FragmentActivity implements TaskListListener {
 	viewPager.setAdapter(new TaskFragmentPagerAdapter(getSupportFragmentManager(), taskLists));
     }
 
+    
 }

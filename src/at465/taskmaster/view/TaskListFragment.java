@@ -5,23 +5,27 @@ import java.util.List;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import at465.taskmaster.R;
-import at465.taskmaster.application.TaskMasterApplication;
 import at465.taskmaster.application.TaskManager;
 import at465.taskmaster.application.TaskManager.TasksListener;
+import at465.taskmaster.application.TaskMasterApplication;
 
 import com.google.api.services.tasks.model.Task;
 
 public class TaskListFragment extends ListFragment implements TasksListener {
     public static final String TASK_LIST_ID_KEY = "taskListId";
     public static final String TASK_LIST_TITLE_KEY = "taskListTitle";
-    
+
     private String taskListId;
     private String taskListTitle;
     private TaskManager taskManager;
+    private List<Task> tasks;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,7 @@ public class TaskListFragment extends ListFragment implements TasksListener {
 
     @Override
     public void tasksUpdated(String taskListId, List<Task> tasks) {
+	this.tasks = tasks;
 	TaskListAdapter adapter = new TaskListAdapter(getActivity());
 	adapter.setData(tasks);
 	setListAdapter(adapter);
