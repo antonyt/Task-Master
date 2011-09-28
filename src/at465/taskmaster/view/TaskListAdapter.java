@@ -14,6 +14,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import at465.taskmaster.R;
 import at465.taskmaster.application.TaskConstants;
+import at465.taskmaster.application.Util;
 
 import com.google.api.services.tasks.model.Task;
 
@@ -52,13 +53,14 @@ public class TaskListAdapter extends BaseAdapter {
 	ViewHolder holder;
 	if (convertView == null) {
 	    convertView = inflater.inflate(R.layout.task_row, null);
-	    
-	    // create a view holder for the row and save the references to the views
+
+	    // create a view holder for the row and save the references to the
+	    // views
 	    holder = new ViewHolder();
 	    holder.title = (TextView) convertView.findViewById(R.id.title);
 	    holder.dueDate = (TextView) convertView.findViewById(R.id.due_date);
 	    holder.checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
-	    
+
 	    // set view holder as tag
 	    convertView.setTag(holder);
 	} else {
@@ -66,22 +68,27 @@ public class TaskListAdapter extends BaseAdapter {
 	    // retrieve previously saved view holder
 	    holder = (ViewHolder) convertView.getTag();
 	}
-	
+
 	final Task task = tasks.get(position);
 	final boolean taskCompleted = TaskConstants.COMPLETED.equals(task.getStatus());
-	
+	final int indentLevel = Util.getIndentLevel(tasks, position);
+
+	holder.title.setPadding(indentLevel * 20, 0, 0, 0);
+
 	// set title
 	holder.title.setText(task.getTitle());
-	
-	// apply strike-through effect if the task is completed; reset strike-through otherwise
+
+	// apply strike-through effect if the task is completed; reset
+	// strike-through otherwise
 	if (taskCompleted) {
 	    holder.title.setPaintFlags(holder.title.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 	} else {
 	    holder.title.setPaintFlags(holder.title.getPaintFlags() & (Paint.STRIKE_THRU_TEXT_FLAG - 1));
 	}
-	
+
 	// set checkbox status, and attach checked listener
-	// we need to write back to the data once the user clicks the checkbox, and then update our views
+	// we need to write back to the data once the user clicks the checkbox,
+	// and then update our views
 	// TODO: do not instantiate a new listener for each call to getView(...)
 	holder.checkbox.setOnCheckedChangeListener(null);
 	holder.checkbox.setChecked(taskCompleted);
@@ -98,7 +105,7 @@ public class TaskListAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	    }
 	});
-	
+
 	return convertView;
     }
 
