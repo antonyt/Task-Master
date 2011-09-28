@@ -8,6 +8,7 @@ import android.accounts.OperationCanceledException;
 import android.os.AsyncTask;
 
 import com.google.api.services.tasks.Tasks;
+import com.google.api.services.tasks.model.Task;
 import com.google.api.services.tasks.model.TaskLists;
 
 public class RemoteTaskManager {
@@ -73,6 +74,33 @@ public class RemoteTaskManager {
 	    @Override
 	    protected void onPostExecute(com.google.api.services.tasks.model.Tasks result) {
 		listener.tasksUpdated(taskListId, result);
+	    };
+
+	}.execute();
+    }
+    
+    public void updateTask(final String taskListId, final Task task) {
+	new AsyncTask<Void, Void, com.google.api.services.tasks.model.Task>() {
+
+	    @Override
+	    protected com.google.api.services.tasks.model.Task doInBackground(Void... params) {
+		try {
+		    taskService = taskService == null ? authenticator.authenticate() : taskService;
+		    return taskService.tasks.update(taskListId, task.getId(), task).execute();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		    return null;
+		} catch (AuthenticatorException e) {
+		    e.printStackTrace();
+		} catch (OperationCanceledException e) {
+		    e.printStackTrace();
+		}
+		return null;
+	    }
+
+	    @Override
+	    protected void onPostExecute(com.google.api.services.tasks.model.Task result) {
+		// TODO: implement listener for single task
 	    };
 
 	}.execute();

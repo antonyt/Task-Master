@@ -90,4 +90,8 @@ public class TaskManager {
 	void taskListsUpdated(List<TaskList> taskLists);
     }
 
+    public void updateTask(String taskListId, Task task) {
+	remoteTaskManager.updateTask(taskListId, task);
+    }
+
 }
